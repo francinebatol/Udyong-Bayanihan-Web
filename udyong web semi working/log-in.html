@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Udyong Bayanihan Admin Login</title>
+    <link rel="stylesheet" href="login-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="login-box">
+            <div class="logo-container">
+                <img src="udyong_logo.png" alt="Udyong Bayanihan Logo" class="logo">
+            </div>
+            
+            <h1>Welcome to Udyong Bayanihan!</h1>
+            <p class="subtitle">Admin Portal</p>
+            
+            <div id="loading-spinner" class="loading-spinner hide">
+                <div class="spinner"></div>
+            </div>
+            
+            <div id="error-message" class="error-message hide">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="error-text">Invalid credentials</span>
+            </div>
+            
+            <form id="login-form" class="login-form">
+                <div class="input-group">
+                    <div class="input-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <input type="text" id="username" class="input-field" placeholder="Username" required>
+                </div>
+                
+                <div class="input-group">
+                    <div class="input-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <input type="password" id="password" class="input-field" placeholder="Password" required>
+                    <div class="password-toggle" id="password-toggle">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                </div>
+                
+                <button type="submit" class="login-btn" id="login-btn">
+                    <span>Login</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+            
+            
+        </div>
+    </div>
+
+    <script type="module" src="login.js"></script>
+</body>
+</html>

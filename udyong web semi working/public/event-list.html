@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="event-list.css">
+    <link rel="stylesheet" href="dashboard-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>List of Events</title>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <img src="udyong_logo.png" alt="Udyong Bayanihan Logo">
+        </div>
+        <div class="menu">
+            <ul>
+                <li>
+                    <img src="./assets/dashboard.png" alt="Dashboard Icon">
+                    <a href="admin-dashboard.html">Dashboard</a>
+                </li>
+                <li>
+                    <img src="./assets/volunteer.png" alt="Volunteer Icon">
+                    <a href="volunteer.html">Volunteer</a>
+                </li>
+                <li>
+                    <img src="./assets/setting.png" alt="Admin Icon">
+                    <a href="admins.html">Admins</a>
+                </li>
+                <li>
+                    <img src="./assets/calendar.png" alt="Event Approval Icon">
+                    <a href="event.html">Event Approval</a>
+                </li>
+                <li>
+                    <img src="./assets/clipboard.png" alt="Event List Icon">
+                    <a href="event-list.html" class="active">List of Events</a>
+                </li>
+            </ul>
+        </div>
+        <div class="sign-out">
+            <a href="#">Sign out</a>
+        </div>
+    </div>
+
+    <main>
+        <h1 class="page-title">List of Events</h1>
+        
+        <!-- Loading indicator -->
+        <div id="loading-indicator" class="loading-container hide">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Loading events...</div>
+        </div>
+        
+        <section class="event-list-section">
+            <div class="event-controls">
+                <div class="event-filters">
+                    <button class="filter-btn active" data-filter="all">
+                        <i class="fas fa-calendar-alt"></i> All Events
+                    </button>
+                    <button class="filter-btn" data-filter="upcoming">
+                        <i class="fas fa-calendar-plus"></i> Upcoming
+                    </button>
+                    <button class="filter-btn" data-filter="ongoing">
+                        <i class="fas fa-calendar-day"></i> Ongoing
+                    </button>
+                    <button class="filter-btn" data-filter="past">
+                        <i class="fas fa-calendar-check"></i> Past
+                    </button>
+                </div>
+                <div class="search-form">
+                    <div class="search-input">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchBox" placeholder="Search events...">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="events-status">
+                <p><span id="event-count">0</span> events found</p>
+            </div>
+            
+            <div class="table-container">
+                <table class="event-list-table">
+                    <thead>
+                        <tr>
+                            <th>Event Status</th>
+                            <th>Name of Event</th>
+                            <th>Type of Event</th>
+                            <th>Name of Organization</th>
+                            <th>Date</th>
+                            <th>Address</th>
+                            <th>Head Coordinator</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Populated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div id="no-events-message" class="no-events-message hide">
+                <i class="fas fa-calendar-times"></i>
+                <p>No events found matching your criteria.</p>
+            </div>
+        </section>
+    </main>
+
+    <script type="module" src="event-list.js"></script>
+</body>
+<script type="module" src="logout.js"></script>
+</html>

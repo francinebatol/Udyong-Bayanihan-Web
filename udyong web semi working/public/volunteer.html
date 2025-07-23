@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="volunteer.css">
+    <link rel="stylesheet" href="dashboard-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <title>Volunteer Profiles</title>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <img src="udyong_logo.png" alt="Udyong Bayanihan Logo">
+        </div>
+        <div class="menu">
+            <ul>
+                <li>
+                    <img src="./assets/dashboard.png" alt="Dashboard Image">
+                    <a href="admin-dashboard.html">Dashboard</a>
+                </li>
+                <li>
+                    <img src="./assets/volunteer.png" alt="Volunteer Image">
+                    <a href="volunteer.html" class="active">Volunteer</a>
+                </li>
+                <li>
+                    <img src="./assets/setting.png" alt="Admin Image">
+                    <a href="admins.html">Admins</a>
+                </li>
+                <li>
+                    <img src="./assets/calendar.png" alt="Event Image">
+                    <a href="event.html">Event Approval</a>
+                </li>
+                <li>
+                    <img src="./assets/clipboard.png" alt="Event List Image">
+                    <a href="event-list.html">List of Events</a>
+                </li>
+            </ul>
+        </div>
+        <div class="sign-out">
+            <a href="#">Sign out</a>
+        </div>
+    </div>
+
+    <main>
+        <h1 class="page-title">Volunteer Profiles</h1>
+        
+        <!-- Loading indicator -->
+        <div id="loading-indicator" class="loading-container hide">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Processing...</div>
+        </div>
+        
+        <section class="volunteer-list-section">
+            <!-- Controls Bar - Search and Sort -->
+            <div class="action-controls">
+                <div class="sort-buttons">
+                    <button class="sort-btn active" data-sort="name">
+                        <i class="fas fa-sort-alpha-down"></i> Sort by Name
+                    </button>
+                    <button class="sort-btn" data-sort="barangay">
+                        <i class="fas fa-map-marker-alt"></i> Sort by Barangay
+                    </button>
+                    <button class="sort-btn" data-sort="unverified">
+                        <i class="fas fa-user-clock"></i> Unverified Users
+                    </button>
+                </div>
+                <div class="search-form">
+                    <div class="search-input">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="search-input" placeholder="Search volunteer profiles...">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Volunteer Count -->
+            <div class="volunteer-status">
+                <p><span id="volunteer-count">0</span> volunteers found</p>
+            </div>
+            
+            <!-- Volunteer Table -->
+            <div class="table-container">
+                <table class="volunteer-table">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>First Name</th>
+                            <th>Middle Name</th>
+                            <th>Last Name</th>
+                            <th>Address</th>
+                            <th>Phone Number</th>
+                           
+                            <th> </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Table data will be dynamically loaded here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- No Volunteers Message -->
+            <div id="no-volunteers-message" class="no-volunteers-message hide">
+                <i class="fas fa-user-times"></i>
+                <p>No volunteers found matching your criteria.</p>
+            </div>
+
+            <!-- Pop-Up Profile -->
+            <aside class="pop-up-profile hide-profile">
+                <h1 class="pop-up-banner">Volunteer Profile</h1>
+                <div class="profile-image-container">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgMTIwIDEyMCI+PHBhdGggZmlsbD0iI2UwZTBlMCIgZD0iTTAgMGgxMjB2MTIwSDB6Ii8+PHBhdGggZmlsbD0iIzU1NSIgZD0iTTYwIDIwYzExIDAgMjAgOSAyMCAyMHMtOSAyMC0yMCAyMC0yMC05LTIwLTIwIDktMjAgMjAtMjBtMCA2MWMyMiAwIDQwIDE3IDQwIDM5djFIMjB2LTFjMC0yMiAxOC0zOSA0MC0zOSIvPjwvc3ZnPg==" alt="Profile Picture" id="volunteer-image">
+                </div>
+                <article class="basic-information">
+                    <p id="volunteer-name">N/A</p>
+                    <p id="volunteer-address">N/A</p>
+                </article>
+            
+                <article class="other-information">
+                    <div>
+                        <h3><i class="fas fa-phone"></i> <span id="volunteer-phone">N/A</span></h3>
+                        <h3><i class="fas fa-envelope"></i> <span id="volunteer-email">N/A</span></h3>
+                    </div>
+                    <div>
+                        <h3><i class="fas fa-calendar"></i> <span id="volunteer-age">N/A</span></h3>
+                        <h3><i class="fas fa-birthday-cake"></i> <span id="volunteer-birthday">N/A</span></h3>
+                        <h3><i class="fas fa-venus-mars"></i> <span id="volunteer-gender">N/A</span></h3>
+                    </div>
+                </article>
+                
+                <button id="verify-user-btn" class="verify-user-btn">Verify User</button>
+            
+                <article class="additional-information">
+                    <div>
+                        <h3>Skills:</h3>
+                        <ul id="volunteer-skills"></ul>
+                    </div>
+
+                    <div>
+                        <h3>Interests:</h3>
+                        <ul id="volunteer-interests"></ul>
+                    </div>
+                </article>
+            
+                <button class="close-btn">Close</button>
+            </aside>
+            
+            <!-- ID Picture Popup -->
+            <div class="id-picture-popup hide-profile" style="display: none;">
+                <button class="close-popup-btn"><i class="fas fa-times"></i></button>
+                <h2>ID Verification</h2>
+                <div class="id-picture-container">
+                    <img id="id-picture" src="" alt="ID Picture">
+                </div>
+                <div class="verification-buttons">
+                    <button id="verify-confirm-btn" class="verify-confirm-btn">Verify</button>
+                    <button id="deny-confirm-btn" class="deny-confirm-btn">Deny</button>
+                </div>
+            </div>
+            
+            <!-- Feedback Modal for Denial -->
+            <div id="feedback-modal" class="feedback-modal hide-profile" style="display: none;">
+                <button class="close-popup-btn"><i class="fas fa-times"></i></button>
+                <h2>Provide Denial Reason</h2>
+                <p class="feedback-instruction">Please provide a reason for denying this ID verification. This feedback will be sent to the volunteer.</p>
+                <div class="feedback-form">
+                    <textarea id="denial-feedback" placeholder="Enter reason for denial..."></textarea>
+                    <div id="feedback-error" class="error-message hide">Feedback is required before denying verification.</div>
+                </div>
+                <div class="feedback-buttons">
+                    <button id="submit-feedback-btn" class="deny-confirm-btn">Submit Feedback</button>
+                    <button id="cancel-feedback-btn" class="cancel-btn">Cancel</button>
+                </div>
+            </div>
+            
+            <!-- Confirmation Dialog -->
+            <div class="confirmation-dialog hide-profile" style="display: none;">
+                <div class="confirmation-content">
+                    <h3 id="confirmation-message">Are you sure you want to verify this user?</h3>
+                    <div class="confirmation-buttons">
+                        <button id="confirm-yes-btn">Yes</button>
+                        <button id="confirm-no-btn">No</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Background Overlay -->
+            <div class="overlay hide-profile"></div>
+        </section>
+    </main>
+
+    <script type="module" src="volunteer.js"></script>
+</body>
+<script type="module" src="logout.js"></script>
+</html>

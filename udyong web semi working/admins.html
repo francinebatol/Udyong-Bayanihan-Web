@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="admins.css">
+    <link rel="stylesheet" href="dashboard-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>Admin Profiles</title>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <img src="udyong_logo.png" alt="Udyong Bayanihan Logo">
+        </div>
+        
+        <div class="menu">
+            <ul>
+                <li>
+                    <img src="./assets/dashboard.png" alt="Dashboard Image">
+                    <a href="admin-dashboard.html">Dashboard</a>
+                </li>
+                <li>
+                    <img src="./assets/volunteer.png" alt="Volunteer Image">
+                    <a href="volunteer.html">Volunteer</a>
+                </li>
+                <li>
+                    <img src="./assets/setting.png" alt="Admin Image">
+                    <a href="admins.html" class="active">Admins</a>
+                </li>
+                <li>
+                    <img src="./assets/calendar.png" alt="Event Image">
+                    <a href="event.html">Event Approval</a>
+                </li>
+                <li>
+                    <img src="./assets/clipboard.png" alt="Event List Image">
+                    <a href="event-list.html">List of Events</a>
+                </li>
+            </ul>
+        </div>
+        <div class="sign-out">
+            <a href="#">Sign out</a>
+        </div>
+    </div>
+
+    <main>
+        <h1 class="page-title">Admin Profiles</h1>
+        
+        
+        <div class="status-toggle-container">
+            <div class="status-toggle">
+                <button id="show-active" class="active-tab">Active Accounts</button>
+                <button id="show-inactive">Inactive Accounts</button>
+            </div>
+            
+            <!-- Loading indicator -->
+            <div id="loading-indicator" class="loading-container hide">
+                <div class="loading-spinner"></div>
+                <div class="loading-text">Loading data...</div>
+            </div>
+        </div>
+        
+        <section class="admin-list-section">
+            <div class="header-bar">
+                <div class="action-bar">
+                    <button id="add-new-button" class="add-new-button">
+                        <i class="fas fa-plus-circle"></i> Add New Admin
+                    </button>
+                </div>
+            </div>
+
+            <!-- Scrollable table container -->
+            <div class="admin-table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Password</th>
+                            <th>First Name</th>
+                            <th>Middle Name</th>
+                            <th>Last Name</th>
+                            <th>Barangay</th>
+                            <th>Phone Number</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-table-body">
+                       
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Add User Modal -->
+    <aside id="add-user-modal" class="add-user-modal hide">
+        <h1 class="pop-up-banner">Add New Admin</h1>
+        <form id="add-user-form">
+            <label class="required-field">Username: <input type="text" id="username" required placeholder=" "></label>
+            <label class="required-field">Password: <input type="password" id="password" required placeholder=" "></label>
+            <label class="required-field">First Name: <input type="text" id="firstName" required placeholder=" "></label>
+            <label>Middle Name: <input type="text" id="middleName" placeholder=" "></label>
+            <label class="required-field">Last Name: <input type="text" id="lastName" required placeholder=" "></label>
+            <label class="required-field">Email: <input type="email" id="email" required placeholder=" "></label>
+            <label class="required-field">Position: <input type="text" id="position" required placeholder=" "></label>
+            <label>House No.: <input type="text" id="houseNo" placeholder=" "></label>
+            <label>Street: <input type="text" id="street" placeholder=" "></label>
+            <label class="required-field">Municipality: <input type="text" id="municipality" required placeholder=" "></label>
+            <label class="required-field">Barangay: <input type="text" id="barangay" required placeholder=" "></label>
+            <label class="required-field">Phone Number: <input type="text" id="phoneNo" required pattern="[0-9]+" title="Please enter numbers only" placeholder=" "></label>
+            
+            <div class="skills-selection">
+                <label class="skills-header required-field">Select Skills (Choose exactly 3)</label>
+                <div class="skills-count">Selected: <span id="selected-skills-count">0</span>/3</div>
+
+                <div class="skills-container">
+                    <div class="skill-category">
+                        <div class="category-header" data-category="communication">
+                            <span class="category-name">Communication Skills</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="category-skills" id="communication-skills">
+                            <div class="skill-item">
+                                <input type="checkbox" id="skill-collaboration" class="skill-checkbox" value="Collaboration">
+                                <label for="skill-collaboration">Collaboration</label>
+                            </div>
+                            <div class="skill-item">
+                                <input type="checkbox" id="skill-dedication" class="skill-checkbox" value="Dedication">
+                                <label for="skill-dedication">Dedication</label>
+                            </div>
+                            <div class="skill-item">
+                                <input type="checkbox" id="skill-patience" class="skill-checkbox" value="Patience">
+                                <label for="skill-patience">Patience</label>
+                            </div>
+                            <div class="skill-item">
+                                <input type="checkbox" id="skill-reliability" class="skill-checkbox" value="Reliability">
+                                <label for="skill-reliability">Reliability</label>
+                            </div>
+                            <div class="skill-item">
+                                <input type="checkbox" id="skill-participation" class="skill-checkbox" value="Participation">
+                                <label for="skill-participation">Participation</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="skill-category">
+                        <div class="category-header" data-category="leadership">
+                            <span class="category-name">Leadership Skills</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="category-skills" id="leadership-skills">
+                            <div class="skill-item">
+                                <input type="checkbox" id="skill-decision-making" class="skill-checkbox" value="Decision Making">
+                                <label for="skill-decision-making">Decision Making</label>
+                            </div>
+                            <div class="skill-item">
+                                <input type="checkbox" id="skill-mentoring" class="skill-checkbox" value="Mentoring">
+                                <label for="skill-mentoring">Mentoring</label>
+                            </div>
+                            <div class="skill-item">
+                                <input type="checkbox" id="skill-coaching" class="skill-checkbox" value="Coaching">
+                                <label for="skill-coaching">Coaching</label>
+                            </div>
+                            <div class="skill-item">
+                                <input type="checkbox" id="skill-planning" class="skill-checkbox" value="Planning">
+                                <label for="skill-planning">Planning</label>
+                            </div>
+                            <div class="skill-item">
+                                <input type="checkbox" id="skill-training" class="skill-checkbox" value="Training">
+                                <label for="skill-training">Training</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="skill-category">
+                        <div class="category-header" data-category="problem-solving">
+                            <span class="category-name">Problem-Solving Skills</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="category-skills" id="problem-solving-skills">
+                            <div class="skill-item">
+                                <input type="checkbox" id="skill-critical-thinking" class="skill-checkbox" value="Critical Thinking">
+                                <label for="skill-critical-thinking">Critical Thinking</label>
+                            </div>
+                            <div class="skill-item">
+                                <input type="checkbox" id="skill-data-gathering" class="skill-checkbox" value="Data Gathering">
+                                <label for="skill-data-gathering">Data Gathering</label>
+                            </div>
+                            <div class="skill-item">
+                                <input type="checkbox" id="skill-determination" class="skill-checkbox" value="Determination">
+                                <label for="skill-determination">Determination</label>
+                            </div>
+                            <div class="skill-item">
+                                <input type="checkbox" id="skill-research" class="skill-checkbox" value="Research">
+                                <label for="skill-research">Research</label>
+                            </div>
+                            <div class="skill-item">
+                                <input type="checkbox" id="skill-flexibility" class="skill-checkbox" value="Flexibility">
+                                <label for="skill-flexibility">Flexibility</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="skill-category">
+                        <div class="category-header" data-category="personal">
+                            <span class="category-name">Personal Skills</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="category-skills" id="personal-skills">
+                            <div class="skill-item">
+                                <input type="checkbox" id="skill-adaptability" class="skill-checkbox" value="Adaptability">
+                                <label for="skill-adaptability">Adaptability</label>
+                            </div>
+                            <div class="skill-item">
+                                <input type="checkbox" id="skill-conflict-resolution" class="skill-checkbox" value="Conflict Resolution">
+                                <label for="skill-conflict-resolution">Conflict Resolution</label>
+                            </div>
+                            <div class="skill-item">
+                                <input type="checkbox" id="skill-resilience" class="skill-checkbox" value="Resilience">
+                                <label for="skill-resilience">Resilience</label>
+                            </div>
+                            <div class="skill-item">
+                                <input type="checkbox" id="skill-emotional-intelligence" class="skill-checkbox" value="Emotional Intelligence">
+                                <label for="skill-emotional-intelligence">Emotional Intelligence</label>
+                            </div>
+                            <div class="skill-item">
+                                <input type="checkbox" id="skill-empathy" class="skill-checkbox" value="Empathy">
+                                <label for="skill-empathy">Empathy</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="skill-category">
+                        <div class="category-header" data-category="creativity">
+                            <span class="category-name">Creativity Skills</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="category-skills" id="creativity-skills">
+                            <div class="skill-item">
+                                <input type="checkbox" id="skill-brainstorming" class="skill-checkbox" value="Brainstorming">
+                                <label for="skill-brainstorming">Brainstorming</label>
+                            </div>
+                            <div class="skill-item">
+                                <input type="checkbox" id="skill-design" class="skill-checkbox" value="Design">
+                                <label for="skill-design">Design</label>
+                            </div>
+                            <div class="skill-item">
+                                <input type="checkbox" id="skill-innovation" class="skill-checkbox" value="Innovation">
+                                <label for="skill-innovation">Innovation</label>
+                            </div>
+                            <div class="skill-item">
+                                <input type="checkbox" id="skill-exploration" class="skill-checkbox" value="Exploration and Discovery">
+                                <label for="skill-exploration">Exploration and Discovery</label>
+                            </div>
+                            <div class="skill-item">
+                                <input type="checkbox" id="skill-visual-thinking" class="skill-checkbox" value="Visual Thinking">
+                                <label for="skill-visual-thinking">Visual Thinking</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="skill-category">
+                        <div class="category-header" data-category="analytical">
+                            <span class="category-name">Analytical Skills</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="category-skills" id="analytical-skills">
+                            <div class="skill-item">
+                                <input type="checkbox" id="skill-benchmarking" class="skill-checkbox" value="Benchmarking">
+                                <label for="skill-benchmarking">Benchmarking</label>
+                            </div>
+                            <div class="skill-item">
+                                <input type="checkbox" id="skill-mindfulness" class="skill-checkbox" value="Mindfulness">
+                                <label for="skill-mindfulness">Mindfulness</label>
+                            </div>
+                            <div class="skill-item">
+                                <input type="checkbox" id="skill-process-analysis" class="skill-checkbox" value="Process Analysis">
+                                <label for="skill-process-analysis">Process Analysis</label>
+                            </div>
+                            <div class="skill-item">
+                                <input type="checkbox" id="skill-scenario-planning" class="skill-checkbox" value="Scenario Planning">
+                                <label for="skill-scenario-planning">Scenario Planning</label>
+                            </div>
+                            <div class="skill-item">
+                                <input type="checkbox" id="skill-troubleshooting" class="skill-checkbox" value="Troubleshooting">
+                                <label for="skill-troubleshooting">Troubleshooting</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="button-section">
+                <button type="button" id="save-user-button" class="primary-button">Save</button>
+                <button type="button" id="cancel-user-button" class="secondary-button">Discard</button>
+            </div>
+        </form>
+    </aside>
+
+  
+    <div id="modal-overlay" class="modal-overlay hide"></div>
+
+    <!-- View Admin Modal-->
+    <aside id="view-admin-modal" class="view-admin-modal hide">
+        <div class="modal-content">
+            <h1>Admin Profile</h1>
+            <form class="modal-form">
+                
+                <div class="modal-row">
+                    <div class="modal-group">
+                        <label for="view-username">Username</label>
+                        <input type="text" id="view-username" readonly />
+                    </div>
+                    <div class="modal-group">
+                        <label for="view-password">Password</label>
+                        <input type="password" id="view-password" readonly />
+                    </div>
+                </div>
+  
+              
+                <div class="modal-row">
+                    <div class="modal-group">
+                        <label for="view-first-name">First Name</label>
+                        <input type="text" id="view-first-name" readonly />
+                    </div>
+                    <div class="modal-group">
+                        <label for="view-middle-name">Middle Name</label>
+                        <input type="text" id="view-middle-name" readonly />
+                    </div>
+                    <div class="modal-group">
+                        <label for="view-last-name">Last Name</label>
+                        <input type="text" id="view-last-name" readonly />
+                    </div>
+                </div>
+  
+              
+                <div class="modal-row">
+                    <div class="modal-group">
+                        <label for="view-position">Position</label>
+                        <input type="text" id="view-position" readonly />
+                    </div>
+                    <div class="modal-group">
+                        <label for="view-email">Email</label>
+                        <input type="email" id="view-email" readonly />
+                    </div>
+                    <div class="modal-group">
+                        <label for="view-phone-no">Phone Number</label>
+                        <input type="text" id="view-phone-no" readonly />
+                    </div>
+                </div>
+  
+               
+                <div class="modal-row">
+                    <div class="modal-group">
+                        <label for="view-house-no">House No.</label>
+                        <input type="text" id="view-house-no" readonly />
+                    </div>
+                    <div class="modal-group">
+                        <label for="view-street">Street</label>
+                        <input type="text" id="view-street" readonly />
+                    </div>
+                </div>
+  
+               
+                <div class="modal-row">
+                    <div class="modal-group">
+                        <label for="view-barangay">Barangay</label>
+                        <input type="text" id="view-barangay" readonly />
+                    </div>
+                    <div class="modal-group">
+                        <label for="view-municipality">Municipality</label>
+                        <input type="text" id="view-municipality" readonly />
+                    </div>
+                </div>
+  
+             
+                <div class="modal-actions">
+                    
+                    <button type="button" id="edit-profile-button" class="primary-button">Edit Profile</button>
+                    
+                 
+                    <div id="edit-actions" class="action-buttons hide">
+                        <button type="button" id="save-edit-button" class="primary-button">Save Changes</button>
+                        <button type="button" id="cancel-edit-button" class="secondary-button">Cancel</button>
+                    </div>
+                    
+                 
+                    <button type="button" id="close-view-modal" class="outline-button">Close</button>
+                </div>
+            </form>
+        </div>
+    </aside>
+    
+    <script type="module" src="admins.js"></script>
+    <script type="module" src="logout.js"></script>
+</body>
+</html>

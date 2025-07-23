@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="event.css">
+    <link rel="stylesheet" href="dashboard-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>Event Approval</title>
+</head>
+<body>
+ 
+    <div class="sidebar">
+        <div class="logo">
+            <img src="udyong_logo.png" alt="Udyong Bayanihan Logo">
+        </div>
+        <div class="menu">
+            <ul>
+                <li>
+                    <img src="./assets/dashboard.png" alt="Dashboard Icon">
+                    <a href="admin-dashboard.html">Dashboard</a>
+                </li>
+                <li>
+                    <img src="./assets/volunteer.png" alt="Volunteer Icon">
+                    <a href="volunteer.html">Volunteer</a>
+                </li>
+                <li>
+                    <img src="./assets/setting.png" alt="Admin Icon">
+                    <a href="admins.html">Admins</a>
+                </li>
+                <li>
+                    <img src="./assets/calendar.png" alt="Event Icon">
+                    <a href="event.html" class="active">Event Approval</a>
+                </li>
+                <li>
+                    <img src="./assets/clipboard.png" alt="Event List Icon">
+                    <a href="event-list.html">List of Events</a>
+                </li>
+            </ul>
+        </div>
+        <div class="sign-out">
+            <a href="#">Sign out</a>
+        </div>
+    </div>
+
+   
+    <main>
+        <h1 class="page-title">Event Approval</h1>
+        
+        <!-- Loading indicator -->
+        <div id="loading-indicator" class="loading-container hide">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Processing...</div>
+        </div>
+        
+        <section class="pending-events-section">
+            <h1 class="page-title">Pending Events</h1>
+            <table class="pending-events-table">
+                <thead>
+                    <tr>
+                        <th>Name of Event</th>
+                        <th>Type of Event</th>
+                        <th>Name of Organization</th>
+                        <th>Date</th>
+                        <th>Address</th>
+                        <th>Head Coordinator</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                   <!-- Table data will be populated by JavaScript -->
+                </tbody>
+            </table>
+        </section>
+
+   
+        <section class="events-overview">
+            <article class="event-overview-card">
+                <h1>Approved Events</h1>
+                <p id="approved-events-count">0 Events</p>
+            </article>
+            <article class="event-overview-card">
+                <h1>Rejected Events</h1>
+                <p id="rejected-events-count">0 Events</p> 
+            </article>
+        </section>
+    </main>
+
+    <!-- Event Modal -->
+    <div id="event-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-event-title">Event Title</h2>
+                <span class="modal-close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <!-- Content populated dynamically -->
+            </div>
+            <div class="modal-footer">
+                <button id="approve-modal-btn" class="btn approve-btn"><i class="fas fa-check"></i> Approve Event</button>
+                <!--<button id="reject-modal-btn" class="btn reject-btn"><i class="fas fa-times"></i> Reject Event</button>
+                <button id="close-modal-btn" class="btn close-btn"><i class="fas fa-arrow-left"></i> Go Back</button> -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Feedback Modal for Rejection -->
+    <div id="feedback-modal" class="modal">
+        <div class="modal-content feedback-modal-content">
+            <div class="modal-header">
+                <h2>Provide Rejection Feedback</h2>
+                <span class="modal-close" id="feedback-modal-close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Please provide feedback on why this event is being rejected. This feedback will be visible to the event organizer.</p>
+                <div class="feedback-form">
+                    <div class="form-group">
+                        <label for="rejection-feedback">Rejection Reason:</label>
+                        <textarea id="rejection-feedback" rows="5" placeholder="Enter feedback explaining why the event is being rejected..."></textarea>
+                        <div id="feedback-error" class="error-message hide">Feedback is required before rejecting an event.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="submit-feedback-btn" class="btn reject-btn"><i class="fas fa-paper-plane"></i> Submit & Reject</button>
+                <button id="cancel-feedback-btn" class="btn close-btn"><i class="fas fa-times"></i> Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="popup-message" class="popup-message hide">
+        <p id="popup-text"></p>
+    </div>
+
+    <script type="module" src="event.js"></script>
+    <script type="module" src="logout.js"></script>
+
+
+<script>
+    // Direct implementation of the submit feedback function
+    function handleSubmitFeedback() {
+      console.log("Direct handleSubmitFeedback called");
+      
+      // Get the current event ID from the global variable
+      const eventId = window.currentEventId;
+      console.log("Current event ID:", eventId);
+      
+      // Find the feedback textarea
+      const feedbackElement = document.getElementById("rejection-feedback");
+      if (!feedbackElement) {
+        console.error("Feedback textarea not found");
+        return;
+      }
+      
+      // Get the feedback text
+      const feedback = feedbackElement.value.trim();
+      console.log("Feedback content:", feedback);
+      
+      // Validate feedback
+      const errorElement = document.getElementById("feedback-error");
+      if (!feedback) {
+        if (errorElement) {
+          errorElement.classList.remove("hide");
+        }
+        feedbackElement.focus();
+        return;
+      }
+      
+      // Hide error if shown
+      if (errorElement) {
+        errorElement.classList.add("hide");
+      }
+      
+      // Check if we have an event ID
+      if (!eventId) {
+        alert("Error: No event selected for rejection");
+        return;
+      }
+      
+      console.log("Proceeding with rejection for event:", eventId);
+      
+      // Call the updateEventStatus function
+      window.updateEventStatus(eventId, "Rejected", feedback);
+    }
+    
+    // When DOM is loaded, attach event handlers directly
+    document.addEventListener("DOMContentLoaded", function() {
+      // Get the submit button
+      const submitBtn = document.getElementById("submit-feedback-btn");
+      if (submitBtn) {
+        // Replace any existing handler with a direct one
+        submitBtn.onclick = function(e) {
+          e.preventDefault();
+          console.log("Submit button clicked directly");
+          handleSubmitFeedback();
+          return false;
+        };
+        console.log("Submit button handler attached successfully");
+      }
+      
+      // Also replace the button with a new one to ensure clean event handlers
+      const modalFooter = document.querySelector("#feedback-modal .modal-footer");
+      if (modalFooter && submitBtn) {
+        const newButton = document.createElement("button");
+        newButton.id = "submit-feedback-btn";
+        newButton.className = "btn reject-btn";
+        newButton.innerHTML = '<i class="fas fa-paper-plane"></i> Submit & Reject';
+        newButton.onclick = function(e) {
+          e.preventDefault();
+          console.log("New submit button clicked");
+          handleSubmitFeedback();
+          return false;
+        };
+        
+        // Replace the old button
+        modalFooter.replaceChild(newButton, submitBtn);
+        console.log("Submit button replaced with new one");
+      }
+    });
+  </script>
+
+</body>
+</html>

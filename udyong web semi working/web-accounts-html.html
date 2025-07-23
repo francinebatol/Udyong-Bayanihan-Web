@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="web-accounts.css">
+    <link rel="stylesheet" href="dashboard-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>Web Account Management</title>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <img src="udyong_logo.png" alt="Udyong Bayanihan Logo">
+        </div>
+        
+        <div class="menu">
+            <ul>
+                <li>
+                    <img src="./assets/dashboard.png" alt="Dashboard Image">
+                    <a href="admin-dashboard.html">Dashboard</a>
+                </li>
+                <li>
+                    <img src="./assets/volunteer.png" alt="Volunteer Image">
+                    <a href="volunteer.html">Volunteer</a>
+                </li>
+                <li>
+                    <img src="./assets/setting.png" alt="Admin Image">
+                    <a href="admins.html">Admins</a>
+                </li>
+                <li>
+                    <img src="./assets/calendar.png" alt="Event Image">
+                    <a href="event.html">Event Approval</a>
+                </li>
+                <li>
+                    <img src="./assets/clipboard.png" alt="Event List Image">
+                    <a href="event-list.html">List of Events</a>
+                </li>
+                <li>
+                    <img src="./assets/user-shield.png" alt="Web Accounts">
+                    <a href="web-accounts.html" class="active">Web Accounts</a>
+                </li>
+            </ul>
+        </div>
+        <div class="sign-out">
+            <a href="#" id="sign-out-btn">Sign out</a>
+        </div>
+    </div>
+
+    <main>
+        <h1 class="page-title">Web Account Management</h1>
+        
+        <!-- Loading indicator -->
+        <div id="loading-indicator" class="loading-container hide">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Processing...</div>
+        </div>
+        
+        <section class="web-accounts-section">
+            <div class="accounts-header">
+                <h2>Web Portal Accounts</h2>
+                <p>Manage login accounts for this web application</p>
+                
+                <button id="add-account-btn" class="add-account-btn">
+                    <i class="fas fa-user-plus"></i> Add New Account
+                </button>
+            </div>
+            
+            <div class="accounts-table-container">
+                <table class="accounts-table">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Password</th>
+                            <th>Last Login</th>
+                            <th>Created Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="accounts-table-body">
+                        <!-- Table data will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Add Account Modal -->
+    <div id="add-account-modal" class="modal hide">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Web Account</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="add-account-form">
+                    <div class="form-group">
+                        <label for="new-username">Username</label>
+                        <input type="text" id="new-username" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="new-password">Password</label>
+                        <div class="password-field">
+                            <input type="password" id="new-password" required>
+                            <button type="button" class="toggle-password" data-target="new-password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="password-strength">
+                            <div class="strength-bar"></div>
+                            <span class="strength-text">Password strength</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirm-password">Confirm Password</label>
+                        <input type="password" id="confirm-password" required>
+                        <span class="password-match-message"></span>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="save-account" class="primary-btn">Save Account</button>
+                <button id="cancel-add" class="secondary-btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Edit Account Modal -->
+    <div id="edit-account-modal" class="modal hide">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Web Account</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="edit-account-form">
+                    <div class="form-group">
+                        <label for="edit-username">Username</label>
+                        <input type="text" id="edit-username" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-password">New Password (leave blank to keep current)</label>
+                        <div class="password-field">
+                            <input type="password" id="edit-password">
+                            <button type="button" class="toggle-password" data-target="edit-password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="password-strength">
+                            <div class="strength-bar"></div>
+                            <span class="strength-text">Password strength</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="account-status">Account Status</label>
+                        <select id="account-status">
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="update-account" class="primary-btn">Update Account</button>
+                <button id="cancel-edit" class="secondary-btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Overlay -->
+    <div id="modal-overlay" class="modal-overlay hide"></div>
+    
+    <!-- Notification -->
+    <div id="notification" class="notification hide">
+        <div class="notification-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="notification-content">
+            <div class="notification-message">Operation completed successfully</div>
+        </div>
+        <button class="close-notification">&times;</button>
+    </div>
+
+    <script type="module" src="web-accounts.js"></script>
+    <script type="module" src="logout.js"></script>
+    <script type="module" src="auth-check.js"></script>
+</body>
+</html>

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="dashboard-styles.css">
+    <style>
+        
+        .card {
+            cursor: pointer; 
+            position: relative; 
+            overflow: hidden; 
+        }
+
+        .card::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.1);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none; 
+            border-radius: 15px;
+        }
+
+        .card:hover {
+            transform: translateY(-5px); 
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
+        }
+
+        .card:hover::after {
+            opacity: 1;
+        }
+
+        /*  indicator */
+        .card::before {
+            content: "View all →";
+            position: absolute;
+            bottom: 15px;
+            right: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .card:hover::before {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <img src="udyong_logo.png" alt="Udyong Bayanihan Logo">
+        </div>
+        <div class="menu">
+            <ul>
+                <li>
+                    <img src="./assets/dashboard.png" alt="Dashboard Image">
+                    <a href="admin-dashboard.html" class="active">Dashboard</a>
+                </li>
+                <li>
+                    <img src="./assets/volunteer.png" alt="Volunteer Image">
+                    <a href="volunteer.html">Volunteer</a>
+                </li>
+                <li>
+                    <img src="./assets/setting.png" alt="Admin Image">
+                    <a href="admins.html">Admins</a>
+                </li>
+                <li>
+                    <img src="./assets/calendar.png" alt="Event Image">
+                    <a href="event.html">Event Approval</a>
+                </li>
+                <li>
+                    <img src="./assets/clipboard.png" alt="Event Image">
+                    <a href="event-list.html">List of Events</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="sign-out">
+            <a href="#">Sign out</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <header>
+            <h1>Dashboard</h1>
+        </header>
+        <div class="dashboard-cards">
+            <div class="card" id="ongoing-events">
+                <h2>Ongoing Events</h2>
+                <div class="event-list" id="ongoing-events-list">
+                    <p>No ongoing events</p>
+                </div>
+            </div>
+            <div class="card" id="volunteers">
+                <h2>Volunteers</h2>
+                <p id="volunteer-count">Loading...</p>
+            </div>
+            <div class="card" id="upcoming-events">
+                <h2>Upcoming Events</h2>
+                <div class="event-list" id="upcoming-events-list">
+                    <p>No upcoming events</p>
+                </div>
+            </div>
+            <div class="card" id="past-events">
+                <h2>Past Events</h2>
+                <div class="event-list" id="past-events-list">
+                    <p>No past events</p>
+                </div>
+            </div>
+        </div>        
+    </div>
+
+    <!-- Firebase -->
+    <script type="module">
+        import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+        import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA5Kcj0SESEGMxrrtEjvUbjF3N6teCfwBU",
+            authDomain: "udyong-bayanihan-5146f.firebaseapp.com",
+            projectId: "udyong-bayanihan-5146f",
+            storageBucket: "udyong-bayanihan-5146f.appspot.com",
+            messagingSenderId: "70772787902",
+            appId: "1:70772787902:web:6e760a48967e01625f6cef",
+            measurementId: "G-47EYYV2W75",
+        };
+
+        const app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0];
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // Update Volunteer Count
+        async function updateVolunteerCount() {
+            try {
+                const usersCollection = collection(db, "usersAccount");
+                const querySnapshot = await getDocs(usersCollection);
+
+                const volunteerCount = querySnapshot.size;
+                document.getElementById("volunteer-count").textContent = `${volunteerCount} Volunteers`;
+                
+                
+                document.getElementById("volunteers").addEventListener("click", function() {
+                    window.location.href = "volunteer.html";
+                });
+            } catch (error) {
+                console.error("Error fetching volunteer count:", error);
+                document.getElementById("volunteer-count").textContent = "Error loading volunteers";
+            }
+        }
+
+        
+        // Update Event Cards 
+async function updateEventCards() {
+    try {
+        
+        const eventInfoCollection = collection(db, "EventInformation");
+        const eventInfoSnapshot = await getDocs(eventInfoCollection);
+        
+       
+        const eventStatusMap = new Map();
+        eventInfoSnapshot.forEach((doc) => {
+            const data = doc.data();
+            if (data.eventId && data.status) {
+                eventStatusMap.set(data.eventId, data.status);
+            }
+        });
+        
+        console.log(`Found ${eventStatusMap.size} events with status information`);
+        
+       
+        const eventsCollection = collection(db, "EventDetails");
+        const querySnapshot = await getDocs(eventsCollection);
+        const currentDate = new Date();
+
+        let ongoingEvents = [];
+        let upcomingEvents = [];
+        let pastEvents = [];
+
+        querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            
+            
+            const eventId = doc.id;
+            const status = eventStatusMap.get(eventId);
+            
+            
+            if (status !== "Accepted") {
+                return;
+            }
+            
+            
+            if (!data.date || !data.date.seconds) {
+                return;
+            }
+            
+            const eventDate = new Date(data.date.seconds * 1000); // Convert Firestore timestamp to Date
+
+            const event = {
+                name: data.nameOfEvent || "N/A",
+                date: eventDate,
+                address: data.barangay || "N/A",
+            };
+
+            // Determine if event is today 
+            const today = new Date();
+            const isToday = 
+                eventDate.getDate() === today.getDate() && 
+                eventDate.getMonth() === today.getMonth() && 
+                eventDate.getFullYear() === today.getFullYear();
+
+            if (isToday) {
+                ongoingEvents.push(event);
+            } else if (eventDate > currentDate) {
+                upcomingEvents.push(event);
+            } else {
+                pastEvents.push(event);
+            }
+        });
+
+        // Sort Events
+        upcomingEvents.sort((a, b) => a.date - b.date);
+        pastEvents.sort((a, b) => b.date - a.date);
+
+        // Render Events - Modified to remove time
+        const generateEventHTML = (events) =>
+            events
+                .map(
+                    (event) => `
+                        <div class="event-item">
+                            <p><strong>${event.name}</strong></p>
+                            <p>${event.date.toDateString()}</p>
+                            <p>${event.address}</p>
+                        </div>
+                        <hr class="separator">
+                    `
+                )
+                .join("");
+
+        const ongoingEventsList = document.getElementById("ongoing-events-list");
+        const upcomingEventsList = document.getElementById("upcoming-events-list");
+        const pastEventsList = document.getElementById("past-events-list");
+        
+        ongoingEventsList.innerHTML = generateEventHTML(ongoingEvents.slice(0, 4)) || "<p>No ongoing events</p>";
+        upcomingEventsList.innerHTML = generateEventHTML(upcomingEvents.slice(0, 4)) || "<p>No upcoming events</p>";
+        pastEventsList.innerHTML = generateEventHTML(pastEvents.slice(0, 4)) || "<p>No past events</p>";
+        
+        // Make cards clickable to redirect to event list with appropriate filter
+        document.getElementById("ongoing-events").addEventListener("click", function() {
+            window.location.href = "event-list.html?filter=ongoing";
+        });
+        
+        document.getElementById("upcoming-events").addEventListener("click", function() {
+            window.location.href = "event-list.html?filter=upcoming";
+        });
+        
+        document.getElementById("past-events").addEventListener("click", function() {
+            window.location.href = "event-list.html?filter=past";
+        });
+    } catch (error) {
+        console.error("Error fetching events:", error);
+    }
+}
+
+       
+        updateVolunteerCount();
+        updateEventCards();
+    </script>
+    <script type="module" src="logout.js"></script>
+</body>
+</html>
